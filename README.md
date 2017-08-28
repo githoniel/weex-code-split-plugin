@@ -5,13 +5,15 @@ restore webpack code-splite feature for weex, this plugin need you to give a fs 
 
 ## Install
 
-download this project, copy index.js to your project.
+```bash
+npm install weex-async-plugins --save
+```
 
 ## Usage
 
 add below to you webpack.config.js
 ```js
-const WeexAsyncPlugin = require('../index')
+const WeexAsyncPlugin = require('weex-async-plugins')
 
 module.exports = {
     plugins: [
