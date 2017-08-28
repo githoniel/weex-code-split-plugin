@@ -1,4 +1,3 @@
-const ConcatSource = require('webpack-sources').ConcatSource
 const assign = require('lodash/assign')
 
 /**
