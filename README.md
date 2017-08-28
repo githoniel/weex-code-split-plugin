@@ -13,7 +13,7 @@ npm install weex-async-plugins --save
 
 add below to you webpack.config.js
 ```js
-const WeexAsyncPlugin = require('weex-async-plugins')
+const WeexAsyncPlugin = require('weex-async-plugin')
 
 module.exports = {
     plugins: [
