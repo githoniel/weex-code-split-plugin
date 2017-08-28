@@ -19,7 +19,7 @@ module.exports = {
     plugins: [
         new WeexAsyncPlugin({
             fsReadFunction:weexFSRead,
-            publicPath: './'
+            publicPath: '/Share/ULightApp'
         })
   ]
 }
@@ -27,6 +27,6 @@ module.exports = {
 
 ## Options
 
-*fsReadFunction(required, string/function)*: fs read function, do not use any es6 syntax for compatibility.
+`fsReadFunction(required, string/function)`: fs read function, do not use any es6 syntax for compatibility.
 
-*publicPath(optional, string)*: override webpack's public path for weexFSRead's base path.
+`publicPath(optional, string)`: override webpack's public path for weexFSRead's base path.
