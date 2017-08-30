@@ -158,8 +158,21 @@ Instance.prototype.apply = function apply(compiler) {
             return this.asString([
                 "if (isWeex) {",
                 this.indent([
-                    `var jsContent = weexFsRead(${weexBasePath} + ${scriptSrcPath});`,
-                    `new Function(jsContent).call(context);`
+                    `weexFsRead(${weexBasePath} + ${scriptSrcPath})`,
+                    this.indent([
+                        `.then(function(jsContent){`,
+                        `new Function(jsContent).call(context);`,
+                        "var chunk = installedChunks[chunkId];",
+                        "if(chunk !== 0) {",
+                        this.indent([
+                            "if(chunk) {",
+                            this.indent("chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));"),
+                            "}",
+                            "installedChunks[chunkId] = undefined;"
+                        ]),
+                        `}`
+                    ]),
+                    "})"
                 ]),
                 "} else {",
                 this.indent([

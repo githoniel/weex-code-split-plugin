@@ -96,8 +96,17 @@
 /******/
 /******/ 		// start chunk loading
 /******/ 		if (isWeex) {
-/******/ 			var jsContent = weexFsRead(__webpack_require__.p + "bundle-" + chunkId + ".js");
-/******/ 			new Function(jsContent).call(context);
+/******/ 			var jsContent = weexFsRead(__webpack_require__.p + "bundle-" + chunkId + ".js")
+/******/ 				.then(function(jsContent){
+/******/ 				new Function(jsContent).call(context);
+/******/ 				var chunk = installedChunks[chunkId];
+/******/ 				if(chunk !== 0) {
+/******/ 					if(chunk) {
+/******/ 						chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 					}
+/******/ 					installedChunks[chunkId] = undefined;
+/******/ 				}
+/******/ 			})
 /******/ 		} else {
 /******/ 			var head = document.getElementsByTagName('head')[0];
 /******/ 			var script = document.createElement('script');
