@@ -1,4 +1,5 @@
 const assign = require('lodash/assign')
+const ConcatSource = require("webpack-sources").ConcatSource
 
 /**
  * validate plugin options
@@ -31,7 +32,7 @@ function Instance(options) {
 Instance.prototype.apply = function apply(compiler) {
     const options = this.options
     compiler.plugin('compilation', function (compilation) {
-        // inject weex env flag
+        // inject fs read function
         compilation.mainTemplate.plugin("local-vars", function (source, chunk) {
             if (chunk.chunks.length > 0) {
                 return this.asString([
@@ -211,6 +212,19 @@ Instance.prototype.apply = function apply(compiler) {
                 "}"
             ]);
         })
+
+        compilation.chunkTemplate.plugin("render", function(modules, chunk) {
+			const jsonpFunction = this.outputOptions.jsonpFunction;
+			const source = new ConcatSource();
+			source.add(`this.${jsonpFunction}(${JSON.stringify(chunk.ids)},`);
+			source.add(modules);
+			const entries = [chunk.entryModule].filter(Boolean).map(m => m.id);
+			if(entries.length > 0) {
+				source.add(`,${JSON.stringify(entries)}`);
+			}
+			source.add(")");
+			return source;
+		});
     })
 }
 
