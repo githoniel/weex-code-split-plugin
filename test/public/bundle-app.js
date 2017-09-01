@@ -96,7 +96,7 @@
 /******/
 /******/ 		// start chunk loading
 /******/ 		if (isWeex) {
-/******/ 			var jsContent = weexFsRead(__webpack_require__.p + "bundle-" + chunkId + ".js")
+/******/ 			weexFsRead(__webpack_require__.p + "bundle-" + chunkId + ".js")
 /******/ 				.then(function(jsContent){
 /******/ 				new Function(jsContent).call(context);
 /******/ 				var chunk = installedChunks[chunkId];

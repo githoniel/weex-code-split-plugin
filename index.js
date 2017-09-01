@@ -215,8 +215,9 @@ Instance.prototype.apply = function apply(compiler) {
 
         compilation.chunkTemplate.plugin("render", function(modules, chunk) {
 			const jsonpFunction = this.outputOptions.jsonpFunction;
-			const source = new ConcatSource();
-			source.add(`this.${jsonpFunction}(${JSON.stringify(chunk.ids)},`);
+            const source = new ConcatSource();
+            source.add(`var ${jsonpFunction} = this.${jsonpFunction};`);
+			source.add(`${jsonpFunction}(${JSON.stringify(chunk.ids)},`);
 			source.add(modules);
 			const entries = [chunk.entryModule].filter(Boolean).map(m => m.id);
 			if(entries.length > 0) {
