@@ -58,6 +58,7 @@ Instance.prototype.apply = function apply(compiler) {
                     "",
                     "// install a JSONP callback for chunk loading",
                     "var isWeex = typeof weex !== 'undefined' && weex.config.env.platform !== 'Web'",
+                    "var isHttp = weex && (weex.config.bundleUrl.indexOf('http') === 0)",
                     "var weexJsonpContext = {};",
                     "var context = isWeex ? weexJsonpContext : window;",
                     `var parentJsonpFunction = context[${JSON.stringify(jsonpFunction)}];`,
@@ -157,7 +158,7 @@ Instance.prototype.apply = function apply(compiler) {
             });
             const weexBasePath = options.publicPath ? `"${options.publicPath}"` : `${this.requireFn}.p`
             return this.asString([
-                "if (isWeex) {",
+                "if (isWeex && isHttp) {",
                 this.indent([
                     `weexFsRead(${weexBasePath} + ${scriptSrcPath})`,
                     this.indent([
