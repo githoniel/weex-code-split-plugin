@@ -3,7 +3,7 @@
     "lodash": "^4.17.4"
   },
   "name": "weex-async-plugin",
-  "version": "1.0.4",
+  "version": "1.0.9",
   "main": "index.js",
   "devDependencies": {
     "fs-extra": "^4.0.1",

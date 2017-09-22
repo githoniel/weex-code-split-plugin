@@ -158,23 +158,45 @@ Instance.prototype.apply = function apply(compiler) {
             });
             const weexBasePath = options.publicPath ? `"${options.publicPath}"` : `${this.requireFn}.p`
             return this.asString([
-                "if (isWeex && isHttp) {",
+                "if (isWeex) {",
                 this.indent([
-                    `weexFsRead(${weexBasePath} + ${scriptSrcPath})`,
-                    this.indent([
-                        `.then(function(jsContent){`,
-                        `new Function(jsContent).call(context);`,
-                        "var chunk = installedChunks[chunkId];",
-                        "if(chunk !== 0) {",
+                    "if (isHttp) {",
                         this.indent([
-                            "if(chunk) {",
-                            this.indent("chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));"),
-                            "}",
-                            "installedChunks[chunkId] = undefined;"
+                            `fetch(${weexBasePath} + ${scriptSrcPath})`,
+                            this.indent([
+                                `.then(function(resp){ return resp.text()})`,
+                                `.then(function(jsContent){`,
+                                `new Function(jsContent).call(context);`,
+                                "var chunk = installedChunks[chunkId];",
+                                "if(chunk !== 0) {",
+                                this.indent([
+                                    "if(chunk) {",
+                                    this.indent("chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));"),
+                                    "}",
+                                    "installedChunks[chunkId] = undefined;"
+                                ]),
+                                `}`
+                            ]),
+                            "})"
                         ]),
-                        `}`
-                    ]),
-                    "})"
+                    "} else { ",
+                    this.indent([
+                        `weexFsRead(${weexBasePath} + ${scriptSrcPath})`,
+                        this.indent([
+                            `.then(function(jsContent){`,
+                            `new Function(jsContent).call(context);`,
+                            "var chunk = installedChunks[chunkId];",
+                            "if(chunk !== 0) {",
+                            this.indent([
+                                "if(chunk) {",
+                                this.indent("chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));"),
+                                "}",
+                                "installedChunks[chunkId] = undefined;"
+                            ]),
+                            `}`
+                        ]),
+                        "})"
+                    ])
                 ]),
                 "} else {",
                 this.indent([

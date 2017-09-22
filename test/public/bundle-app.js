@@ -1,6 +1,7 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var isWeex = typeof weex !== 'undefined' && weex.config.env.platform !== 'Web'
+/******/ 	var isHttp = weex && (weex.config.bundleUrl.indexOf('http') === 0)
 /******/ 	var weexJsonpContext = {};
 /******/ 	var context = isWeex ? weexJsonpContext : window;
 /******/ 	var parentJsonpFunction = context["webpackJsonp"];
@@ -96,17 +97,31 @@
 /******/
 /******/ 		// start chunk loading
 /******/ 		if (isWeex) {
-/******/ 			weexFsRead(__webpack_require__.p + "bundle-" + chunkId + ".js")
-/******/ 				.then(function(jsContent){
-/******/ 				new Function(jsContent).call(context);
-/******/ 				var chunk = installedChunks[chunkId];
-/******/ 				if(chunk !== 0) {
-/******/ 					if(chunk) {
-/******/ 						chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 			if (isHttp) {
+/******/ 				fetch(__webpack_require__.p + "bundle-" + chunkId + ".js")
+/******/ 					.then(function(resp){ return resp.text()})
+/******/ 					.then(function(jsContent){
+/******/ 					new Function(jsContent).call(context);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
 /******/ 					}
-/******/ 					installedChunks[chunkId] = undefined;
-/******/ 				}
-/******/ 			})
+/******/ 				})
+/******/ 			} else {
+/******/ 				weexFsRead(__webpack_require__.p + "bundle-" + chunkId + ".js")
+/******/ 					.then(function(jsContent){
+/******/ 					new Function(jsContent).call(context);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				})
 /******/ 		} else {
 /******/ 			var head = document.getElementsByTagName('head')[0];
 /******/ 			var script = document.createElement('script');
