@@ -1,12 +1,12 @@
-# weex-async-plugin
+# weex-code-split-plugin
 
-restore webpack code-splite feature for weex, this plugin need you to give a fs read function and it will use 
+restore webpack code-split feature for weex, this plugin need you to give a fs read function and it will use 
 `new Function` to run your splited code.
 
 ## Install
 
 ```bash
-npm install weex-async-plugins --save
+npm install weex-code-split-plugin --save
 ```
 
 ## Usage
