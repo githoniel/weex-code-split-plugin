@@ -58,7 +58,7 @@ Instance.prototype.apply = function apply(compiler) {
                     "",
                     "// install a JSONP callback for chunk loading",
                     "var isWeex = typeof weex !== 'undefined' && weex.config.env.platform !== 'Web'",
-                    "var isHttp = weex && (weex.config.bundleUrl.indexOf('http') === 0)",
+                    "var isHttp = typeof weex !== 'undefined' && (weex.config.bundleUrl.indexOf('http') === 0)",
                     "var weexJsonpContext = {};",
                     "var context = isWeex ? weexJsonpContext : window;",
                     `var parentJsonpFunction = context[${JSON.stringify(jsonpFunction)}];`,
@@ -164,20 +164,34 @@ Instance.prototype.apply = function apply(compiler) {
                         this.indent([
                             `fetch(${weexBasePath} + ${scriptSrcPath})`,
                             this.indent([
-                                `.then(function(resp){ return resp.text()})`,
-                                `.then(function(jsContent){`,
-                                `new Function(jsContent).call(context);`,
-                                "var chunk = installedChunks[chunkId];",
-                                "if(chunk !== 0) {",
+                                `.then(function(resp){`,
                                 this.indent([
-                                    "if(chunk) {",
-                                    this.indent("chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));"),
-                                    "}",
-                                    "installedChunks[chunkId] = undefined;"
+                                    `if(resp.ok) {`,
+                                    this.indent([
+                                        `return resp.text()`
+                                    ]),
+                                `}`]),
+                                this.indent([
+                                    `throw new Error('Loading chunk ' + chunkId + ' failed.')`
                                 ]),
-                                `}`
+                                `})`,
+                                `.then(function(jsContent){`,
+                                this.indent([
+                                    `new Function(jsContent).call(context);`,
+                                    "var chunk = installedChunks[chunkId];",
+                                    "if(chunk !== 0) {",
+                                    this.indent([
+                                        "if(chunk) {",
+                                        this.indent(
+                                            "chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));"
+                                        ),
+                                        "}",
+                                        "installedChunks[chunkId] = undefined;"
+                                    ]),
+                                    `}`
+                                ]),
+                                "})"
                             ]),
-                            "})"
                         ]),
                     "} else { ",
                     this.indent([
@@ -196,7 +210,8 @@ Instance.prototype.apply = function apply(compiler) {
                             `}`
                         ]),
                         "})"
-                    ])
+                    ]),
+                    "}",
                 ]),
                 "} else {",
                 this.indent([

@@ -2,8 +2,8 @@
   "dependencies": {
     "lodash": "^4.17.4"
   },
-  "name": "weex-async-plugin",
-  "version": "1.0.9",
+  "name": "weex-code-split-plugin",
+  "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
     "fs-extra": "^4.0.1",

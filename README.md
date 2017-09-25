@@ -13,11 +13,11 @@ npm install weex-async-plugins --save
 
 add below to you webpack.config.js
 ```js
-const WeexAsyncPlugin = require('weex-async-plugin')
+const WeexCodeSplitPlugin = require('weex-code-split-plugin')
 
 module.exports = {
     plugins: [
-        new WeexAsyncPlugin({
+        new WeexCodeSplitPlugin({
             fsReadFunction:weexFSRead,
             publicPath: '/Share/ULightApp'
         })
@@ -30,3 +30,18 @@ module.exports = {
 `fsReadFunction(required, string/function)`: fs read function, do not use any es6 syntax for compatibility.
 
 `publicPath(optional, string)`: override webpack's public path for weexFSRead's base path.
+
+## DEV mode
+
+if you wants to use this in dev mode running at real device.
+you need to rewrite the publicPath as below
+```js
+const ip = require('ip').address()
+const port = require('../port') // you port
+
+weexConfig.plugins.forEach((item) => {
+    if (item instanceof WeexCodeSplitPlugin) {
+        item.options.publicPath = `http://${ip}:${port}/`
+    }
+})
+```
