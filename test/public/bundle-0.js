@@ -1,4 +1,4 @@
-var webpackJsonp = this.webpackJsonp;webpackJsonp([0],webpackJsonp([0],[
+webpackJsonp = this.webpackJsonp;weex = this.weex;webpackJsonp([0],webpackJsonp([0],[
 /* 0 */,
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {

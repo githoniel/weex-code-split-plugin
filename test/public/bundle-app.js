@@ -3,6 +3,7 @@
 /******/ 	var isWeex = typeof weex !== 'undefined' && weex.config.env.platform !== 'Web'
 /******/ 	var isHttp = typeof weex !== 'undefined' && (weex.config.bundleUrl.indexOf('http') === 0)
 /******/ 	var weexJsonpContext = {};
+/******/ 	if(isWeex) { weexJsonpContext.weex = weex }
 /******/ 	var context = isWeex ? weexJsonpContext : window;
 /******/ 	var parentJsonpFunction = context["webpackJsonp"];
 /******/ 	context["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {

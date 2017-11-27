@@ -60,6 +60,7 @@ Instance.prototype.apply = function apply(compiler) {
                     "var isWeex = typeof weex !== 'undefined' && weex.config.env.platform !== 'Web'",
                     "var isHttp = typeof weex !== 'undefined' && (weex.config.bundleUrl.indexOf('http') === 0)",
                     "var weexJsonpContext = {};",
+                    "if(isWeex) { weexJsonpContext.weex = weex }",
                     "var context = isWeex ? weexJsonpContext : window;",
                     `var parentJsonpFunction = context[${JSON.stringify(jsonpFunction)}];`,
                     `context[${JSON.stringify(jsonpFunction)}] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {`,
@@ -254,7 +255,7 @@ Instance.prototype.apply = function apply(compiler) {
         compilation.chunkTemplate.plugin("render", function(modules, chunk) {
 			const jsonpFunction = this.outputOptions.jsonpFunction;
             const source = new ConcatSource();
-            source.add(`var ${jsonpFunction} = this.${jsonpFunction};`);
+            source.add(`${jsonpFunction} = this.${jsonpFunction};weex = this.weex;`);
 			source.add(`${jsonpFunction}(${JSON.stringify(chunk.ids)},`);
 			source.add(modules);
 			const entries = [chunk.entryModule].filter(Boolean).map(m => m.id);
